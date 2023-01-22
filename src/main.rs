@@ -2,6 +2,7 @@ use std::{fs, thread};
 use std::path::Path;
 use std::io::{Write, ErrorKind};
 use std::time::Duration;
+use chrono::prelude::*;
 use select::document::Document;
 use select::predicate;
 
@@ -28,40 +29,43 @@ fn main() {
     // Create an HTML file to display all the images
     let mut index = fs::File::create(root_dir.clone() + "/index.html")
         .expect("Could not open file to save image");
-    index.write_all(&
+        
+    let date = Utc::now().format("%Y-%m-%d").to_string();
+
+    index.write_all(format!(
 "<html>
 <head>
   <title>TwoKinds</title>
   <style>
-    html { background: black; }
-    * { font-family: monospace; }
-    h1, label { color: white; }
-    input { width: 5em; }
-    img {
+    html {{ background: black; }}
+    * {{ font-family: monospace; }}
+    h1, label {{ color: white; }}
+    input {{ width: 5em; }}
+    img {{
       width: 100%;
       height: auto;
       margin-bottom: 5px;
-    }
+    }}
   </style>
 </head>
 <script>
-window.onload = function() {
+window.onload = function() {{
   // Add an event listener to the form so we can cancel it and handle it ourselves
   let form = document.getElementById('page-form');
   form.addEventListener('submit', jump, false);
-}
+}}
 
-function jump(event=null) {
+function jump(event=null) {{
   // If we intercepted a form submit event, cancel it.
   if (event) event.preventDefault();
 
   // Get the value currently in the input box and jump to that image
   let page = document.getElementById('page-entry').value;
   location.hash = '#'+page
-}
+}}
 </script>
 <body>
-  <h1>TwoKinds Complete Gallery</h1>
+  <h1>TwoKinds Complete Gallery ({})</h1>
   <form id='page-form'>
     <table>
       <tr>
@@ -72,7 +76,7 @@ function jump(event=null) {
         </td>
       </tr>
     </table>
-  </form>\n\n"
+  </form>\n\n",date)
     .as_bytes())
     .expect("Unable to write index header");
 
