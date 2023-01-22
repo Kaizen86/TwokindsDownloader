@@ -1,0 +1,22 @@
+[package]
+name = "twokinds_download"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = "0.9.5"
+select = "0.5.0"
+
+[profile.release]
+# Remove symbols from the binary
+strip = true
+# Instruct to optimise for size rather than speed
+#opt-level = "z"
+# Enable Link Time Optimisation
+lto = true
+# Disable parallel code generation to allow for optimisations
+codegen-units = 1
+# Disable traceback unwinding
+panic = "abort"
