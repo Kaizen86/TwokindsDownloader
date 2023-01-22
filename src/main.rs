@@ -148,7 +148,7 @@ function jump(event=null) {
         // Don't attempt to download files we already have
         let page_fullpath = chapter_dir.clone() + "/" + &page_id + ".jpg";
         if Path::new(&page_fullpath).exists() {
-          println!("Skipping {page_id}");
+          //println!("Skipping {page_id}");
           continue;
         }
 
