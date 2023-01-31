@@ -216,7 +216,8 @@ fn get_page(client: &reqwest::Client, url: &str) -> reqwest::Response {
   // Return the response
   match result {
     Ok(response) => response,
-    Err(error) => panic!("Error retrieving {:?}\nReponse status {:?}\n{:?}",
-                               url, error.status(), error)
+    Err(error) => 
+      panic!("Error retrieving {:?}\nReponse status {:?}\n{:?}",
+             url, error.status(), error)
   }
 }
