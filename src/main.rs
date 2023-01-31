@@ -22,15 +22,15 @@ fn main() {
             // We can proceed if the directory already exists
             ErrorKind::AlreadyExists => (),
             // However, if the directory truly doesn't exist, then panic.
-            _ => panic!("Could not create root directory.")
+            _ => panic!("Could not create root directory")
         }
     }
 
     // Create an HTML file to display all the images
     let mut index = fs::File::create(root_dir.clone() + "/index.html")
-        .expect("Could not open file to save image");
+        .expect("Could not open file to write index");
         
-    let date = Utc::now().format("%Y-%m-%d").to_string();
+    let date = Utc::now().format("%Y-%m-%d").to_string(); // yyyy-mm-dd my beloved
 
     index.write_all(format!(
 "<html>
@@ -76,7 +76,7 @@ function jump(event=null) {{
         </td>
       </tr>
     </table>
-  </form>\n\n",date)
+  </form>\n\n",date) // Place today's date in the <h1> tag
     .as_bytes())
     .expect("Unable to write index header");
 
@@ -147,7 +147,7 @@ function jump(event=null) {{
         index.write_all(
           format!("  <img id='{page_id}' src='{page_partialpath}'>\n")
             .as_bytes())
-          .expect("Could not append reference to index");
+          .expect("Could not append reference to index.html");
           
         // Don't attempt to download files we already have
         let page_fullpath = chapter_dir.clone() + "/" + &page_id + ".jpg";
@@ -162,10 +162,12 @@ function jump(event=null) {{
         url = domain_url.to_owned();
         url.push_str(page_href);
         let page_resp = get_page(&client, &url);
-        thread::sleep(Duration::from_secs(2));
-
+        
         let page = Document::from_read(page_resp)
           .expect("Error parsing page document");
+
+        // We don't want to annoy the server, so a delay here is curteous.
+        thread::sleep(Duration::from_secs(1));
 
         /*
             A comic page contains an article tag, which follows a fixed structure.
@@ -197,23 +199,24 @@ function jump(event=null) {{
         let mut file = fs::File::create(&page_fullpath)
           .expect("Could not open file to save image");
         page_img.copy_to(&mut file)
-          .expect("Unable to write image data. Out of space?");
+          .expect("Unable to write image data");
     }
   }
   // Finalise the index
   index.write_all("</body>\n</html>".as_bytes())
-    .expect("Unable to finalise index");
+    .expect("Unable to finalise index.html");
 }
 
-fn get_page(client: &reqwest::Client, url: &str) -> reqwest::Response {
+fn get_page(client: &reqwest::Client, url: &str) -> reqwest::Response {  
   // Get the archive page
   let result = client
     .get(url)
     .send();
-  
+
   // Return the response
   match result {
     Ok(response) => response,
-    Err(error) => panic!("Error retrieving {:?}\nReponse status {:?}\n{:?}", url, error.status(), error),
+    Err(error) => panic!("Error retrieving {:?}\nReponse status {:?}\n{:?}",
+                               url, error.status(), error)
   }
 }
