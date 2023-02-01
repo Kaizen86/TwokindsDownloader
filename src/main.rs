@@ -36,16 +36,28 @@ fn main() {
 "<html>
 <head>
   <title>TwoKinds</title>
+  <meta content='width=device-width, initial-scale=1' name='viewport'/>
   <style>
     html {{ background: black; }}
     * {{ font-family: monospace; }}
     h1, label {{ color: white; }}
     input {{ width: 5em; }}
+    
     img {{
-      width: 100%;
-      height: auto;
+      /* Center the images on the screen */
+      display: block;
+      margin-left: auto; 
+      margin-right: auto;
+      /* Leave a small gap between images */
       margin-bottom: 5px;
     }}
+    /* If the screen cannot fit the images, they must be resized */
+    @media only screen and (max-width: 825px) {{
+      img {{
+        width: 100%;
+        height: auto;
+      }}
+    }}    
   </style>
 </head>
 <script>
