@@ -107,7 +107,7 @@ function jump(event=null) {{
       // Retrieve the unique identifer string for each chapter
       let chapter_id = chapter.attr("data-ch-id")
         .expect("Chapter does not have an id?");
-      println!("chapter {:?}", chapter_id); // Print the id for progress tracking
+      println!("chapter {chapter_id}"); // Print the id for progress tracking
       
       // Create the chapter directory
       let chapter_dir = root_dir.clone() + "/" + chapter_id;
@@ -146,14 +146,18 @@ function jump(event=null) {{
 
       for link in aside.find(predicate::Name("a")) {
         // Extract the href within the <a>
-        let page_href = link.attr("href").unwrap();
-
-        // Extract the text from the <span>
-        let page_id = link.find(predicate::Name("span"))
-          .next()
-          .unwrap()
-          .text();
+        let page_href = link.attr("href")
+          .unwrap();
         
+        // Extract the page id from the href
+        // (Usually a number, but sometimes contains letters)
+        // e.g. /comic/1158ann18/
+        let mut href_split: Vec<String> =  page_href.split("/")
+          .map(|s| s.to_owned())
+          .collect();
+        href_split.reverse();
+        let page_id = &href_split[1];
+
         // Append the image to the HTML index
         let page_partialpath = chapter_id.to_owned() + "/" + &page_id + ".jpg";
         index.write_all(
