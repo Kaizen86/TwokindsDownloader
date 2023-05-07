@@ -16,16 +16,20 @@ async fn main() {
       Err(error) => match error.kind() {
           // We can proceed if the directory already exists
           ErrorKind::AlreadyExists => (),
-          // However, if the directory truly doesn't exist, then panic.
+          // However if we truly couldn't create it, then panic.
           _ => panic!("Could not create root directory")
       }
   }
 
-  // Using PathBuf seems far more sensible than manually crafting URLs
+  // Fetch the archive page for information about all chapters and their pages
   let mut url = PathBuf::from(domain_url);
   url.push("archive");
   let response = get_page(&client, url).await;
-  println!("{:?}",response);
+  println!("{:?}", &response);
+  let content = match response.text().await {
+    Ok(content) => content,
+    Err(why) => panic!("Failed to read response from /archive request! {why}")
+  };
 }
 
 async fn get_page(client: &Client, url: PathBuf) -> Response {  
