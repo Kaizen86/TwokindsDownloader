@@ -54,4 +54,4 @@ if error_count > 0:
      ".\nRecommend using -c to clean them up and then re-running the scraper.")
 else:
   suffix = ". :)"
-print(f"{error_count} corrupt image{''if error_count==1else's'} found" + suffix)
+print(f"{error_count} corrupt image{'s'*(error_count!=1)} found" + suffix)
